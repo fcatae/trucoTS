@@ -1,0 +1,13 @@
+{
+  "name": "trucots",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/app.js",
+  "scripts": {
+      "start": "node dist/app.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
