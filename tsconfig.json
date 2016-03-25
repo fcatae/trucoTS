@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "listFiles": true,
+        "module": "commonjs",
+        "rootDir": "src",
+        "sourceMap": true,
+        "outDir": "dist"   
+    }
+}
