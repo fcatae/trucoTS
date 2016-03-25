@@ -1,1 +1,3 @@
-console.log('hello app');
+import { teste } from './cartas'
+
+teste()
