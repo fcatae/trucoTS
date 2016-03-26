@@ -14,7 +14,7 @@ export class Baralho {
         }
     }
     
-    getCarta(n: number) {
+    getCarta(n: number) : Carta {
         return this._cartas[n];
     } 
 }

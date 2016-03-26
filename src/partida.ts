@@ -27,6 +27,14 @@ export class Partida {
         this.embaralhar();
     }
     
+    p1view() {
+        return this.createPlayerView(0, [1,2,3]);                
+    }
+        
+    p2view() {
+        return this.createPlayerView(0, [4,5,6]);
+    }
+        
     embaralhar() {
         for(let i=0; i<TotalCartas; i++) {
             let rand = Math.floor(Math.random() * TotalCartas); 
@@ -37,24 +45,15 @@ export class Partida {
         }
     }
     
-    createPlayerView(curinga: number, ordem: number[]) : PlayerView {
-        var carta_curinga = this.getCarta(curinga);
-        var carta_0 = this.getCarta(ordem[0]);
-        var carta_1 = this.getCarta(ordem[1]);
-        var carta_2 = this.getCarta(ordem[2]);
+    private createPlayerView(curinga: number, ordem: number[]) : PlayerView {
+        let carta_curinga = this.getCarta(curinga);
+
+        let cartas = ordem.map( i => this.getCarta(i) );
         
-        return new PlayerView(carta_curinga, [carta_0, carta_1, carta_2]);
+        return new PlayerView(carta_curinga, cartas);
     }
     
-    p1view() {
-        return this.createPlayerView(0, [1,2,3]);                
-    }
-        
-    p2view() {
-        return this.createPlayerView(0, [4,5,6]);
-    }
-    
-    private getCarta(n: number) {
+    private getCarta(n: number) : Carta {
         return this._baralho.getCarta(this._cartas[n]);
     }
     
