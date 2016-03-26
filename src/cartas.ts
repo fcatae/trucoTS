@@ -12,10 +12,14 @@ export class Baralho {
                 this._cartas.push(carta);
             }
         }
+    }
+    
+    getCarta(n: number) {
+        return this._cartas[n];
     } 
 }
 
-class Carta {
+export class Carta {
     num: CartaNumero;
     tipo: CartaTipo;
     

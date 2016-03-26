@@ -1,3 +1,3 @@
-import { teste } from './cartas'
+import { teste } from './partida'
 
 teste()
