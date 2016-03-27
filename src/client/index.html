@@ -10,25 +10,30 @@
     <script src="game.js"></script>
 
     <div class="table">
-        <div>
-            <img class="card" src="images/7_of_spades.png">
-        </div>
-        <div>
-            <img class="card" src="images/backside.png">
-            <img class="card" src="images/backside.png">
-            <img class="card" src="images/backside.png">
-        </div>
-        <div>
-            <img id="c1" class="card" src="images/ace_of_spades.png" draggable="true" ondragstart="drag(event)">
-            <img id="c2" class="card" src="images/3_of_hearts.png"   draggable="true" ondragstart="drag(event)">
-            <img id="c3" class="card" src="images/king_of_clubs.png" draggable="true" ondragstart="drag(event)">
-        </div>
-
-        <div class="drop" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <div>
-                <img class="card" src="images/queen_of_hearts.png">            
-                <img class="card" src="images/4_of_diamonds.png">            
+        
+        <div class="space">
+            <div class="manilha">
+                <img class="card" src="images/7_of_spades.png">
             </div>
+        </div>
+        
+        <div class="space">
+
+            <div class="player_cards">
+                <img class="card" src="images/backside.png">
+                <img class="card" src="images/backside.png">
+                <img class="card" src="images/backside.png">
+            </div>
+            
+            <div class="drop" ondrop="drop(event)" ondragover="allowDrop(event)">
+            </div>
+
+            <div class="player_cards">
+                <img id="c1" class="card" src="images/ace_of_spades.png" draggable="true" ondragstart="drag(event)">
+                <img id="c2" class="card" src="images/3_of_hearts.png"   draggable="true" ondragstart="drag(event)">
+                <img id="c3" class="card" src="images/king_of_clubs.png" draggable="true" ondragstart="drag(event)">
+            </div>
+            
         </div>
 
     </div>
