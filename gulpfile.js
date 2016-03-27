@@ -18,6 +18,6 @@ gulp.task('html', function() {
 });
 
 watch(static_files)
-    .pipe(debug('watch'))
     .pipe(gulp.dest('dist/client/'))
+    .pipe(debug('watch'))
     
