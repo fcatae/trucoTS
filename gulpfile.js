@@ -10,14 +10,22 @@ var static_files = [
        'src/client/**/*.jpg'
        ];
         
-gulp.task('html', function() {
-   
+gulp.task('html', function() {   
    return gulp.src(static_files)
-       .pipe(gulp.dest('dist/client/'));
-    
+       .pipe(gulp.dest('dist/client/'));    
 });
 
-watch(static_files)
-    .pipe(gulp.dest('dist/client/'))
-    .pipe(debug('watch'))
+gulp.task('client-dep', function() {
+    return gulp.src('bower_components/eventemitter/build/eventemitter.js')
+        .pipe(gulp.dest('dist/client/js'));
+});
+
+gulp.task('html-watch', function() {
+
+    return watch(static_files)
+        .pipe(gulp.dest('dist/client/'))
+        .pipe(debug('watch'));
     
+})
+    
+gulp.task('default', ['client-dep', 'html']);
