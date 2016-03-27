@@ -32,7 +32,8 @@ p.game.on('game_update', function(comando) {
         var carta = comando.carta;
         
         selectionarCarta(jogada, carta);
-        
+        depositarCarta(jogada);
+                
     }
 });
 

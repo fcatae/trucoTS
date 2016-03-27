@@ -10,7 +10,11 @@ $(document).ready(function() {
 });
   
 function allowDrop(ev) {
-     ev.preventDefault();
+     
+     if( player1.playable ) {
+        ev.preventDefault();
+     }
+     
  }
  
 function drag(ev) {
@@ -20,7 +24,8 @@ function drag(ev) {
 function drop(ev) {
      ev.preventDefault();
      var data = ev.dataTransfer.getData("text");
-     ev.target.appendChild(document.getElementById(data));
+     
+     depositarCarta(data);
 }
 
 function selecionaImagem(num, tipo) {
@@ -54,4 +59,11 @@ function selectionarCarta(name, carta) {
         imagem = "";
     }
     elem.src = imagem;
+}
+
+function depositarCarta(id) {
+    var drop = document.querySelector('.drop');
+    var carta = document.getElementById(id);
+     
+    drop.appendChild(carta);
 }

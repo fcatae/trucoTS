@@ -23,6 +23,9 @@ interface Carta {
 }
 
 class PlayerClient {
+    
+    playable = false;
+    
     game = new eventemitter.EventEmitter();
     
     play(Carta carta) {
