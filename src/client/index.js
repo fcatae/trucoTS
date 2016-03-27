@@ -1,14 +1,11 @@
 $(document).ready(function() {
 
-    selectionarCarta('p1', {num: 0, tipo: 1});
-    selectionarCarta('p2', {num: 3, tipo: 2});
-    selectionarCarta('p3', {num: 8, tipo: 3});
+    // selectionarCarta('p1', {num: 0, tipo: 1});
+    // selectionarCarta('p2', {num: 3, tipo: 2});
+    // selectionarCarta('p3', {num: 8, tipo: 3});
 
-    selectionarCarta('m', {num: 7, tipo: 1});
+    // selectionarCarta('m', {num: 7, tipo: 1});
     
-    selectionarCarta('c1', {num: -1, tipo: -1});
-    selectionarCarta('c2', {num: -1, tipo: -1});
-    selectionarCarta('c3', {num: -1, tipo: -1});
     
 });
   

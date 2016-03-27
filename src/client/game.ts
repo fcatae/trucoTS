@@ -35,9 +35,6 @@ var player1 = new PlayerClient();
 
 //////////////////////////////////////////////////////////////////////////////
 
-var game_start_event = { curinga: { num: 1, tipo: 0 },
-    cartas: [{ num: 2, tipo: 0 },{ num: 3, tipo: 0 },{ num: 4, tipo: 0 }]};
-    
 // p.game.on('game_start', function() {    
 // });
 
@@ -47,6 +44,14 @@ var game_start_event = { curinga: { num: 1, tipo: 0 },
 // p.game.on('wait_play', function() {    
 // });
 
-setTimeout(function() {
-    player1.game.emit('game_start', game_start_event);
-} , 1000)
+var $: any;
+$(document).ready(function() {
+
+    var game_start_event = { curinga: { num: 1, tipo: 0 },
+        cartas: [{ num: 1, tipo: 1 },{ num: 3, tipo: 2 },{ num: 4, tipo: 3 }]};
+
+    setTimeout(function() {
+        player1.game.emit('game_start', game_start_event);
+    } , 10)
+
+});
