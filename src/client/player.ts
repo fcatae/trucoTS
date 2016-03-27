@@ -66,15 +66,14 @@ player1.game.on('game_update', function(comando) {
     }
 });
 
-player1.game.on('wait_play', function() {
-    
-    //alert('esperando sua jogada!!!')       
-    //p.playable = true;
+player1.game.on('wait_play', function(remote_resolve) {
     
     player1.getPlayAsync()
         .then(function(carta) {
-        // http.send
-        // emit('server-player1')
-
+            
+            // http.send
+            // emit('server-player1')
+            remote_resolve('TODO implement');
     });
+    
 });
