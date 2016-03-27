@@ -1,9 +1,39 @@
 var selectionarCarta: Function;
 var depositarCarta: Function;
+var eventemitter : any;
+
+interface Carta {
+    num: number;
+    tipo: number;        
+}
+
+class PlayerClient {
+    
+    playable = false;
+    promiseResolve: Function;
+    
+    game = new eventemitter.EventEmitter();
+    
+    play(carta: Carta) {
+        // done
+        this.playable = false;
+        this.promiseResolve(carta);
+    }
+    
+    getPlayAsync() {
+        this.playable = true;
+        
+        return new Promise(function(resolve, reject) {
+           this.promiseResolve = resolve;
+        });
+    }
+}
+
+var player1 = new PlayerClient();
 
 var p = player1;
 
-p.game.on('game_start', function(param) {
+player1.game.on('game_start', function(param) {
     var curinga = param.curinga;
     var carta1 = param.cartas[0];
     var carta2 = param.cartas[1];
@@ -20,11 +50,9 @@ p.game.on('game_start', function(param) {
     
 });
 
-var cpu = {
-    jogada: 0    
-};
+var cpu = { jogada: 0 };
 
-p.game.on('game_update', function(comando) {
+player1.game.on('game_update', function(comando) {
     
     if(comando.cmd == 'play') {
         var elements = ['c1','c2','c3'];
@@ -38,7 +66,15 @@ p.game.on('game_update', function(comando) {
     }
 });
 
-p.game.on('wait_play', function() {
-    p.playable = true;
-    //alert('esperando sua jogada!!!')        
+player1.game.on('wait_play', function() {
+    
+    //alert('esperando sua jogada!!!')       
+    //p.playable = true;
+    
+    player1.getPlayAsync()
+        .then(function(carta) {
+        // http.send
+        // emit('server-player1')
+
+    });
 });

@@ -18,10 +18,9 @@ class CPU {
         return new Promise((resolve, reject) => {
             
             var cmd = this.getCommand();
-            resolve(cmd);
-            // setTimeout(function() { 
-            //     resolve(cmd);
-            // }, t)
+            setTimeout(function() { 
+                resolve(cmd);
+            }, t)
             
         });
     }
