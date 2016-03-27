@@ -1,0 +1,11 @@
+.table {
+    background-color: darkgreen;
+    
+    padding: 50px;
+}
+
+.card {
+    height: 100px;
+    
+    margin: 5px;
+}
