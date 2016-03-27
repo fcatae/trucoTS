@@ -16,3 +16,5 @@ var playerView = {
     curinga: { num: 0, tipo: 0 },
     cartas: [{ num: 0, tipo: 0 }, { num: 0, tipo: 0 }, { num: 0, tipo: 0 }]
 }
+
+alert('alo')
