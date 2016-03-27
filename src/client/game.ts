@@ -25,12 +25,18 @@ interface Carta {
 class PlayerClient {
     
     playable = false;
+    ultima: Carta;
     
     game = new eventemitter.EventEmitter();
     
-    play(Carta carta) {
+    play(carta: Carta) {
+        this.playable = false;
+        this.ultima = carta;
+       
         // http.send
         // emit('server-player1')
+        
+        // done
     }
 }
 
@@ -53,27 +59,37 @@ $(document).ready(function() {
     var game_start_event = { curinga: { num: 1, tipo: 0 },
         cartas: [{ num: 1, tipo: 1 },{ num: 3, tipo: 2 },{ num: 4, tipo: 3 }]};
 
-    setTimeout(function() {
-        player1.game.emit('game_start', game_start_event);
-    } , 10)
-
     var game_update = [
         { cmd: 'play', carta: { num: 5, tipo: 3 } },
         { cmd: 'play', carta: { num: 6, tipo: 3 } },
         { cmd: 'play', carta: { num: 7, tipo: 3 } }
     ];
 
-    setTimeout(function() {
-        player1.game.emit('game_update', cpu_turn());
-    } , 100)
 
     setTimeout(function() {
-        player1.game.emit('game_update',  cpu_turn());
-    } , 5000)
+        player1.game.emit('game_start', game_start_event);
 
-    setTimeout(function() {
-        player1.game.emit('game_update', cpu_turn());
-    } , 10000)
+        playerCPU.getPlayAsync(100)
+            .then(function(cpu_turn) {
+            player1.game.emit('game_update', cpu_turn);
+            player1.game.emit('wait_play');
+            })
+
+    } , 10)
+
+    
+    // setTimeout(function() {
+    //     player1.game.emit('game_update', cpu_turn());
+    // } , 100)
+    
+
+    // setTimeout(function() {
+    //     player1.game.emit('game_update',  cpu_turn());
+    // } , 5000)
+
+    // setTimeout(function() {
+    //     player1.game.emit('game_update', cpu_turn());
+    // } , 10000)
 
     var cpu = { jogada: 0, playable: true };
     function cpu_turn() {

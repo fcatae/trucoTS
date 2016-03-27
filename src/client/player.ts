@@ -40,5 +40,5 @@ p.game.on('game_update', function(comando) {
 
 p.game.on('wait_play', function() {
     p.playable = true;
-    alert('esperando sua jogada!!!')        
+    //alert('esperando sua jogada!!!')        
 });
