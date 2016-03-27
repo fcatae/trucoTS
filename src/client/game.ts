@@ -64,15 +64,26 @@ $(document).ready(function() {
     ];
 
     setTimeout(function() {
-        player1.game.emit('game_update', game_update[0]);
+        player1.game.emit('game_update', cpu_turn());
     } , 100)
 
     setTimeout(function() {
-        player1.game.emit('game_update', game_update[1]);
-    } , 1000)
+        player1.game.emit('game_update',  cpu_turn());
+    } , 5000)
 
     setTimeout(function() {
-        player1.game.emit('game_update', game_update[2]);
-    } , 2000)
+        player1.game.emit('game_update', cpu_turn());
+    } , 10000)
+
+    var cpu = { jogada: 0, playable: true };
+    function cpu_turn() {
         
+        // update gamestate
+        player1.game.emit('wait_play');
+        cpu.playable = false;
+        
+        return game_update[cpu.jogada++];
+    }
+     
 });
+

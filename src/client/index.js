@@ -10,11 +10,9 @@ $(document).ready(function() {
 });
   
 function allowDrop(ev) {
-     
      if( player1.playable ) {
-        ev.preventDefault();
+         ev.preventDefault();
      }
-     
  }
  
 function drag(ev) {
@@ -26,6 +24,7 @@ function drop(ev) {
      var data = ev.dataTransfer.getData("text");
      
      depositarCarta(data);
+     player1.playable = false;
 }
 
 function selecionaImagem(num, tipo) {

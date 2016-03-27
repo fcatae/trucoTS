@@ -1,4 +1,5 @@
 var selectionarCarta: Function;
+var depositarCarta: Function;
 
 var p = player1;
 
@@ -33,10 +34,11 @@ p.game.on('game_update', function(comando) {
         
         selectionarCarta(jogada, carta);
         depositarCarta(jogada);
-                
+
     }
 });
 
 p.game.on('wait_play', function() {
+    p.playable = true;
     alert('esperando sua jogada!!!')        
 });
