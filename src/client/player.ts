@@ -19,8 +19,21 @@ p.game.on('game_start', function(param) {
     
 });
 
-p.game.on('game_update', function() {
-    alert('jogada do computador')    
+var cpu = {
+    jogada: 0    
+};
+
+p.game.on('game_update', function(comando) {
+    
+    if(comando.cmd == 'play') {
+        var elements = ['c1','c2','c3'];
+        
+        var jogada = elements[cpu.jogada++];
+        var carta = comando.carta;
+        
+        selectionarCarta(jogada, carta);
+        
+    }
 });
 
 p.game.on('wait_play', function() {

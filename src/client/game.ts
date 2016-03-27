@@ -54,4 +54,22 @@ $(document).ready(function() {
         player1.game.emit('game_start', game_start_event);
     } , 10)
 
+    var game_update = [
+        { cmd: 'play', carta: { num: 5, tipo: 3 } },
+        { cmd: 'play', carta: { num: 6, tipo: 3 } },
+        { cmd: 'play', carta: { num: 7, tipo: 3 } }
+    ];
+
+    setTimeout(function() {
+        player1.game.emit('game_update', game_update[0]);
+    } , 100)
+
+    setTimeout(function() {
+        player1.game.emit('game_update', game_update[1]);
+    } , 1000)
+
+    setTimeout(function() {
+        player1.game.emit('game_update', game_update[2]);
+    } , 2000)
+        
 });
