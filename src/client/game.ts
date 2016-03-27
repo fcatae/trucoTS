@@ -12,7 +12,33 @@
 //     cartas: Carta[];            
 // }
 
-var playerView = {
-    curinga: { num: 0, tipo: 0 },
-    cartas: [{ num: 0, tipo: 0 }, { num: 0, tipo: 0 }, { num: 0, tipo: 0 }]
+var eventemitter : any;
+
+interface Carta {
+    num: number;
+    tipo: number;        
 }
+
+class PlayerClient {
+    game = new eventemitter.EventEmitter();
+    
+    play(Carta carta) {
+        // http.send
+        // emit('server-player1')
+    }
+}
+
+var player1 = new PlayerClient();
+
+// p.game.on('game_start', function() {    
+// });
+
+// p.game.on('game_update', function() {    
+// });
+
+// p.game.on('wait_play', function() {    
+// });
+
+setTimeout(function() {
+    player1.game.emit('game_start');
+} , 1000)
