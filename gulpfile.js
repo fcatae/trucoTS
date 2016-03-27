@@ -16,7 +16,10 @@ gulp.task('html', function() {
 });
 
 gulp.task('client-dep', function() {
-    return gulp.src('bower_components/eventemitter/build/eventemitter.js')
+    return gulp.src([
+        'bower_components/eventemitter/build/eventemitter.js',
+        'bower_components/jquery/dist/jquery.min.js'
+    ])
         .pipe(gulp.dest('dist/client/js'));
 });
 
