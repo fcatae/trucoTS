@@ -4,6 +4,14 @@
     padding: 50px;
 }
 
+.drop {
+    border: 3px dashed #003200;
+    border-radius: 20px;
+        
+    height: 200px;
+    padding: 10px;
+}
+
 .card {
     height: 100px;
     
