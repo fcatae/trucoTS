@@ -1,6 +1,5 @@
 class Game {
     
-    baralho: Baralho;
     m: Carta;
     p1: ServerPlayer;
     p2: ServerPlayer;
@@ -9,7 +8,6 @@ class Game {
     constructor(p1, p2) {
         this.p1 = p1;
         this.p2 = p2;
-        this.baralho = new Baralho();
     }
     
     start(baralho) {
@@ -18,18 +16,7 @@ class Game {
         this.p1.gameStart(baralho.curinga, baralho.p1);
         this.p2.gameStart(baralho.curinga, baralho.p2);             
     }
-
-    private embaralhar() {
-        var baralho = this.baralho;
-        
-        baralho.embaralhar();
-        
-        return {
-            curinga: baralho.curinga,
-            p1: baralho.p1,
-            p2: baralho.p2            
-        };
-    }    
+   
     private defineManilha(game_start_event) {
         this.m = game_start_event.curinga;
         this.manilha = (game_start_event.curinga.num + 1) % 10;
@@ -155,11 +142,13 @@ $(document).ready(function() {
         p2: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }]
     };
 
+    var baralho = new Baralho();
     var game = new Game(p1, pcpu);
     
     setTimeout(function() {
-        
-        game.start(game_start_event);
+
+        var cartas = baralho.distribuir();         
+        game.start(cartas);
         game.play();
                 
     } , 10);

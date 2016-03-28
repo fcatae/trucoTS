@@ -16,7 +16,17 @@ class Baralho {
         }
     }
 
-    embaralhar() {
+    distribuir() {
+        this.embaralhar();
+        
+        return {
+            curinga: this._cartas[0],
+            p1: [ this._cartas[1], this._cartas[2], this._cartas[3] ],
+            p2: [ this._cartas[4], this._cartas[5], this._cartas[6] ]            
+        };
+    } 
+    
+    private embaralhar() {
         for(let i=0; i<TotalCartas; i++) {
             let rand = Math.floor(Math.random() * TotalCartas); 
             
@@ -24,21 +34,7 @@ class Baralho {
             this._cartas[i] = this._cartas[rand];
             this._cartas[rand] = swap;
         }
-    }
-    
-    get curinga() {
-        return this._cartas[0];
-    } 
-    get p1() {
-        return [ this._cartas[1], this._cartas[2], this._cartas[3] ] ;
-    } 
-    get p2() {
-        return [ this._cartas[4], this._cartas[5], this._cartas[6] ] ;
-    } 
-        
-    getCarta(n: number) : Carta {
-        return this._cartas[n];
-    } 
+    }    
 }
 
 class Carta {
