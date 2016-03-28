@@ -2,11 +2,6 @@ var selectionarCarta: Function;
 var depositarCarta: Function;
 var eventemitter : any;
 
-interface Carta {
-    num: number;
-    tipo: number;        
-}
-
 class PlayerClient {
     
     playable = false;

@@ -1,46 +1,6 @@
-interface ServerPlayer {
-    gameStart(game_start_event);
-    gameUpdate(cpu_turn);
-    gameUpdatePlayer(cpu_turn);
-    getPlayAsync() : Promise<any>;
-}
-
-class ServerPlayer1 implements ServerPlayer {
-    name= 'P1'
-    gameStart(game_start_event) {
-        player1.game.emit('game_start', game_start_event);
-    }
-    gameUpdate(cpu_turn) {
-        player1.game.emit('game_update', cpu_turn);
-    }
-    gameUpdatePlayer(cpu_turn) {
-        player1.game.emit('game_update', { cmd: 'play', carta: cpu_turn});
-    }
-
-    getPlayAsync() : Promise<any>  {
-        return new Promise<any>(function(resolve, reject) {
-            player1.game.emit('wait_play', resolve);
-        });             
-    }
-}
-class ServerPlayerCPU implements ServerPlayer {
-    name= 'CPU'
-    gameStart(game_start_event) {
-    }
-    gameUpdate(cpu_turn) {    
-    }
-    gameUpdatePlayer(cpu_turn) {        
-    }
-    getPlayAsync() : Promise<any> {
-        return playerCPU.getPlayAsync(1000);
-    }    
-}
-
-var p1 = new ServerPlayer1();
-var pcpu = new ServerPlayerCPU();
-
 class Game {
     
+    baralho: Baralho;
     m: Carta;
     p1: ServerPlayer;
     p2: ServerPlayer;
@@ -49,14 +9,27 @@ class Game {
     constructor(p1, p2) {
         this.p1 = p1;
         this.p2 = p2;
+        this.baralho = new Baralho();
     }
     
-    start(game_start_event) {
-        this.defineManilha(game_start_event);
-        this.p1.gameStart(game_start_event);
-        this.p2.gameStart(game_start_event);             
+    start(baralho) {
+        
+        this.defineManilha(baralho);
+        this.p1.gameStart(baralho.curinga, baralho.p1);
+        this.p2.gameStart(baralho.curinga, baralho.p2);             
     }
-    
+
+    private embaralhar() {
+        var baralho = this.baralho;
+        
+        baralho.embaralhar();
+        
+        return {
+            curinga: baralho.curinga,
+            p1: baralho.p1,
+            p2: baralho.p2            
+        };
+    }    
     private defineManilha(game_start_event) {
         this.m = game_start_event.curinga;
         this.manilha = (game_start_event.curinga.num + 1) % 10;
@@ -178,7 +151,9 @@ var $: any;
 $(document).ready(function() {
 
     var game_start_event = { curinga: { num: 1, tipo: 0 },
-        cartas: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }]};
+        p1: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }],
+        p2: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }]
+    };
 
     var game = new Game(p1, pcpu);
     
