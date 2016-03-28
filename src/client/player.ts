@@ -73,7 +73,8 @@ player1.game.on('wait_play', function(remote_resolve) {
             
             // http.send
             // emit('server-player1')
-            remote_resolve('TODO implement');
+            remote_resolve(carta);
+            
     });
     
 });

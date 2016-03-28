@@ -19,7 +19,7 @@ class CPU {
             
             var cmd = this.getCommand();
             setTimeout(function() { 
-                resolve(cmd);
+                resolve(cmd.carta);
             }, t)
             
         });

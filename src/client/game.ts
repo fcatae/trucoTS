@@ -1,6 +1,7 @@
 interface ServerPlayer {
     gameStart(game_start_event);
     gameUpdate(cpu_turn);
+    gameUpdatePlayer(cpu_turn);
     getPlayAsync() : Promise<any>;
 }
 
@@ -11,6 +12,10 @@ class ServerPlayer1 implements ServerPlayer {
     gameUpdate(cpu_turn) {
         player1.game.emit('game_update', cpu_turn);
     }
+    gameUpdatePlayer(cpu_turn) {
+        player1.game.emit('game_update', { cmd: 'play', carta: cpu_turn});
+    }
+
     getPlayAsync() : Promise<any>  {
         return new Promise<any>(function(resolve, reject) {
             player1.game.emit('wait_play', resolve);
@@ -21,6 +26,8 @@ class ServerPlayerCPU implements ServerPlayer {
     gameStart(game_start_event) {
     }
     gameUpdate(cpu_turn) {    
+    }
+    gameUpdatePlayer(cpu_turn) {        
     }
     getPlayAsync() : Promise<any> {
         return playerCPU.getPlayAsync(1000);
@@ -57,16 +64,17 @@ class Game {
         
         return p1.getPlayAsync()
             .then(function(turn) {
-                p2.gameUpdate(turn);
+                p2.gameUpdatePlayer(turn);
                 
                 return p2
                     .getPlayAsync()
                     .then(function(turn2) {
-                        p1.gameUpdate(turn2);
+                        p1.gameUpdatePlayer(turn2);
                         return { p1: turn, p2: turn2 };    
                     });
             })
-    }    
+    }
+    
     
 }
 
@@ -82,12 +90,13 @@ $(document).ready(function() {
         
         game.start(game_start_event);
 
-        alert('rodada 1')
-        
         game.swapPlayers();
         
         game.turn()
-            .then(function(){
+            .then(function(result){
+                
+                alert(JSON.stringify(result))
+                
                 alert('rodada 2')
                 game.turn()
                     .then(function() {

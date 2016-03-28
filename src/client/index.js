@@ -1,14 +1,5 @@
-$(document).ready(function() {
-
-    // selectionarCarta('p1', {num: 0, tipo: 1});
-    // selectionarCarta('p2', {num: 3, tipo: 2});
-    // selectionarCarta('p3', {num: 8, tipo: 3});
-
-    // selectionarCarta('m', {num: 7, tipo: 1});
-    
-    
-});
-  
+var mapaCartas = {};
+ 
 function allowDrop(ev) {
      if( player1.playable ) {
          ev.preventDefault();
@@ -21,10 +12,10 @@ function drag(ev) {
  
 function drop(ev) {
      ev.preventDefault();
-     var data = ev.dataTransfer.getData("text");
+     var elemId = ev.dataTransfer.getData("text");
 
-     depositarCarta(data);
-     player1.play();
+     depositarCarta(elemId);
+     player1.play(mapaCartas[elemId]);
 }
 
 function selecionaImagem(num, tipo) {
@@ -53,9 +44,11 @@ function selectionarCarta(name, carta) {
         var num = carta.num;
         var tipo = carta.tipo;
         imagem = selecionaImagem(num, tipo);
+        mapaCartas[name] = { num: num, tipo: tipo };
     }
     else {
         imagem = "";
+        mapaCartas[name] = null;
     }
     elem.src = imagem;
 }
