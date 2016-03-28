@@ -30,34 +30,71 @@ class ServerPlayerCPU implements ServerPlayer {
 var p1 = new ServerPlayer1();
 var pcpu = new ServerPlayerCPU();
 
+class Game {
+    
+    p1: ServerPlayer;
+    p2: ServerPlayer;
+    
+    constructor(p1, p2) {
+        this.p1 = p1;
+        this.p2 = p2;
+    }
+    
+    start(game_start_event) {
+        this.p1.gameStart(game_start_event);
+        this.p2.gameStart(game_start_event);             
+    }
+    
+    swapPlayers() {
+        var swp = this.p1;
+        this.p1 = this.p2;
+        this.p2 = swp;    
+    }
+    
+    turn() : Promise<{}> {
+        var p1 = this.p1;
+        var p2 = this.p2;
+        
+        return p1.getPlayAsync()
+            .then(function(turn) {
+                p2.gameUpdate(turn);
+                
+                return p2
+                    .getPlayAsync()
+                    .then(function(turn2) {
+                        p1.gameUpdate(turn2);
+                        return { p1: turn, p2: turn2 };    
+                    });
+            })
+    }    
+    
+}
+
 var $: any;
 $(document).ready(function() {
 
     var game_start_event = { curinga: { num: 1, tipo: 0 },
         cartas: [{ num: 1, tipo: 1 },{ num: 3, tipo: 2 },{ num: 4, tipo: 3 }]};
 
+    var game = new Game(p1, pcpu);
+    
     setTimeout(function() {
-        p1.gameStart(game_start_event);
-        pcpu.gameStart(game_start_event);
         
-        // jogada do computador
-        pcpu.getPlayAsync()
-            .then(function(cpu_turn) {
-                p1.gameUpdate(cpu_turn);
-                p1.getPlayAsync();
-            });
-                  
-        pcpu.getPlayAsync()
-            .then(function(cpu_turn) {
-                p1.gameUpdate(cpu_turn);
-                p1.getPlayAsync();
-            });
-            
-        pcpu.getPlayAsync()
-            .then(function(cpu_turn) {
-                p1.gameUpdate(cpu_turn);
-                p1.getPlayAsync();
-            });
+        game.start(game_start_event);
+
+        alert('rodada 1')
+        
+        game.swapPlayers();
+        
+        game.turn()
+            .then(function(){
+                alert('rodada 2')
+                game.turn()
+                    .then(function() {
+                        alert('rodada 3')
+                        game.turn();
+                    })
+            });        
 
     } , 10);
      

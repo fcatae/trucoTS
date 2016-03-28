@@ -23,8 +23,8 @@ class PlayerClient {
     getPlayAsync() {
         this.playable = true;
         
-        return new Promise(function(resolve, reject) {
-           this.promiseResolve = resolve;
+        return new Promise((resolve, reject) =>{
+              this.promiseResolve = resolve;
         });
     }
 }
