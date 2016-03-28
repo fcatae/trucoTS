@@ -6,6 +6,7 @@ interface ServerPlayer {
 }
 
 class ServerPlayer1 implements ServerPlayer {
+    name= 'P1'
     gameStart(game_start_event) {
         player1.game.emit('game_start', game_start_event);
     }
@@ -23,6 +24,7 @@ class ServerPlayer1 implements ServerPlayer {
     }
 }
 class ServerPlayerCPU implements ServerPlayer {
+    name= 'CPU'
     gameStart(game_start_event) {
     }
     gameUpdate(cpu_turn) {    
@@ -39,6 +41,7 @@ var pcpu = new ServerPlayerCPU();
 
 class Game {
     
+    m: Carta;
     p1: ServerPlayer;
     p2: ServerPlayer;
     manilha: number;
@@ -55,7 +58,8 @@ class Game {
     }
     
     private defineManilha(game_start_event) {
-        this.manilha = (game_start_event.curinga + 1) % 10;
+        this.m = game_start_event.curinga;
+        this.manilha = (game_start_event.curinga.num + 1) % 10;
     }
     swapPlayers() {
         var swp = this.p1;
@@ -66,20 +70,36 @@ class Game {
     turn() : Promise<{}> {
         var p1 = this.p1;
         var p2 = this.p2;
+        var m = this.m;
         
         return p1.getPlayAsync()
-            .then(function(turn) {
+            .then( (turn) => {
                 p2.gameUpdatePlayer(turn);
                 
                 return p2
                     .getPlayAsync()
-                    .then(function(turn2) {
+                    .then( (turn2) => {
                         p1.gameUpdatePlayer(turn2);
-                        return { p1: turn, p2: turn2 };    
+                        return { m: m, p1: turn, p2: turn2, winner: this.showWinner(turn, turn2) };    
                     });
             })
     }
     
+    private calculaPontos(carta: Carta) {
+        if(carta.num == this.manilha) {
+            return 100 + carta.tipo;
+        }        
+        return carta.num;
+    }
+    
+    private showWinner(turn1, turn2) {
+        var pontos1 = this.calculaPontos(turn1);
+        var pontos2 = this.calculaPontos(turn2);
+        
+        if( pontos1 == pontos2 ) return null;
+        
+        return (pontos1 > pontos2) ? this.p1 : this.p2;
+    }
     
 }
 
@@ -87,7 +107,7 @@ var $: any;
 $(document).ready(function() {
 
     var game_start_event = { curinga: { num: 1, tipo: 0 },
-        cartas: [{ num: 1, tipo: 1 },{ num: 3, tipo: 2 },{ num: 4, tipo: 3 }]};
+        cartas: [{ num: 2, tipo: 1 },{ num: 3, tipo: 2 },{ num: 8, tipo: 3 }]};
 
     var game = new Game(p1, pcpu);
     
