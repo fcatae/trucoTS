@@ -61,6 +61,71 @@ class Game {
         this.m = game_start_event.curinga;
         this.manilha = (game_start_event.curinga.num + 1) % 10;
     }
+
+    play() {       
+         
+        var rodada = 0;
+        var j1 = 0;
+        var j2 = 0;
+        var win1 : ServerPlayer = null ;
+        var resultado;
+
+        var multiplas_rodada = fn_loop_rodadas.bind(this);
+
+        multiplas_rodada();
+                                
+        function fn_loop_rodadas() {
+            this.turn().then(function(result : any) {
+                // determina quem ganhou a rodada
+                var winner = result.winner; 
+
+                // guarda quem ganhou a primeira rodada
+                if( rodada == 0 && winner != null) {
+                    win1 = winner;
+                }
+                
+                // marca os pontos
+                if(winner == p1)     j1++;        
+                if(winner == pcpu)   j2++;
+                
+                if(winner == null) {
+                    // caso tenha sido empate, vai para o desempate
+                    if(j1 == j2) {
+                        j1++;
+                        j2++;
+                    }
+
+                    // se ganhar a primeira, mas empatar depois... entao e ganhador.
+                    if( win1 != null ) {
+                        j1 = ( win1 == p1 )   ? 2 : 1;
+                        j2 = ( win1 == pcpu ) ? 2 : 1;                    
+                    }
+                }            
+                
+                // alert('placar: ' + JSON.stringify({ p1: j1, pcpu: j2 }) );
+                
+                if( 
+                    (( j1 == 2 || j2 == 2 ) && ( j1 != j2 )) || // ha vencedor
+                    ( j1 == 3 && j2 == 3) // empate no final
+                )
+                {
+                    var winner = null;
+                    
+                    if ( j1 != j2 ) {
+                        winner = (j1 > j2) ? p1 : pcpu;
+                    }
+                    resultado = { p1: j1, pcpu: j2, winner: winner };
+                    alert('FINAL ' + JSON.stringify(resultado));
+                }
+                else {
+                    rodada ++;
+                    multiplas_rodada();
+                }            
+                
+            });            
+        }
+                
+    }
     
     turn() : Promise<{}> {
         var p1 = this.p1;
@@ -120,72 +185,9 @@ $(document).ready(function() {
     setTimeout(function() {
         
         game.start(game_start_event);
-        
-        multiplas_rodada();
-        
-        // game.turn()
-        //     .then(function(result){
+        game.play();
                 
-        //         alert(JSON.stringify(result))
-                
-        //         alert('rodada 2')
-        //         game.turn()
-        //             .then(function() {
-        //                 alert('rodada 3')
-        //                 game.turn();
-        //             })
-        //     });        
-
     } , 10);
 
-    var rodada = 0;
-    var j1 = 0;
-    var j2 = 0;
-    var win1 : ServerPlayer = null ;
-             
-    function multiplas_rodada() {
-        game.turn().then(function(result : any) {
-            // determina quem ganhou a rodada
-            var winner = result.winner; 
-
-            // guarda quem ganhou a primeira rodada
-            if( rodada == 0 && winner != null) {
-                win1 = winner;
-            }
-            
-            // marca os pontos
-            if(winner == p1)     j1++;        
-            if(winner == pcpu)   j2++;
-            
-            if(winner == null) {
-                // caso tenha sido empate, vai para o desempate
-                if(j1 == j2) {
-                    j1++;
-                    j2++;
-                }
-
-                // se ganhar a primeira, mas empatar depois... entao e ganhador.
-                if( win1 != null ) {
-                    j1 = ( win1 == p1 )   ? 2 : 1;
-                    j2 = ( win1 == pcpu ) ? 2 : 1;                    
-                }
-            }            
-            
-            alert('placar: ' + JSON.stringify({ p1: j1, pcpu: j2 }) );
-            
-            if( 
-                (( j1 == 2 || j2 == 2 ) && ( j1 != j2 )) || // ha vencedor
-                ( j1 == 3 && j2 == 3) // empate no final
-            )
-            {
-                alert('final de jogo' + JSON.stringify({ p1: j1, pcpu: j2, win1: win1 }) )
-            }
-            else {
-                rodada ++;
-                multiplas_rodada();
-            }            
-            
-        });
-     }
 });
 
