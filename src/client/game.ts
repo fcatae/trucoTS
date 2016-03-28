@@ -61,11 +61,6 @@ class Game {
         this.m = game_start_event.curinga;
         this.manilha = (game_start_event.curinga.num + 1) % 10;
     }
-    swapPlayers() {
-        var swp = this.p1;
-        this.p1 = this.p2;
-        this.p2 = swp;    
-    }
     
     turn() : Promise<{}> {
         var p1 = this.p1;
@@ -80,9 +75,20 @@ class Game {
                     .getPlayAsync()
                     .then( (turn2) => {
                         p1.gameUpdatePlayer(turn2);
-                        return { m: m, p1: turn, p2: turn2, winner: this.showWinner(turn, turn2) };    
+                        
+                        var winner = this.showWinner(turn, turn2);
+                        
+                        ( winner != null && p2 == winner ) && this.swapPlayers();                            
+                        
+                        return { m: m, p1: turn, p2: turn2, winner: winner };    
                     });
             })
+    }
+    
+    swapPlayers() {
+        var swp = this.p1;
+        this.p1 = this.p2;
+        this.p2 = swp;    
     }
     
     private calculaPontos(carta: Carta) {
@@ -107,34 +113,54 @@ var $: any;
 $(document).ready(function() {
 
     var game_start_event = { curinga: { num: 1, tipo: 0 },
-        cartas: [{ num: 2, tipo: 1 },{ num: 3, tipo: 2 },{ num: 8, tipo: 3 }]};
+        cartas: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }]};
 
     var game = new Game(p1, pcpu);
     
     setTimeout(function() {
         
         game.start(game_start_event);
-
-        game.swapPlayers();
         
-        game.turn()
-            .then(function(result){
+        multiplas_rodada();
+        
+        // game.turn()
+        //     .then(function(result){
                 
-                alert(JSON.stringify(result))
+        //         alert(JSON.stringify(result))
                 
-                alert('rodada 2')
-                game.turn()
-                    .then(function() {
-                        alert('rodada 3')
-                        game.turn();
-                    })
-            });        
+        //         alert('rodada 2')
+        //         game.turn()
+        //             .then(function() {
+        //                 alert('rodada 3')
+        //                 game.turn();
+        //             })
+        //     });        
 
     } , 10);
-     
-     
-    function iniciar_rodada(p1: ServerPlayer, p2: ServerPlayer) {
-        p1.getPlayAsync();
-    } 
+
+    var rodada = 0;
+    var j1 = 0;
+    var j2 = 0;
+         
+    function multiplas_rodada() {
+        game.turn().then(function(result : any) {
+            if(result.winner == p1)     j1++;        
+            if(result.winner == pcpu)   j2++;
+            if(result.winner == null)   j1 = j2 = 1; // empate
+            
+            // se empatar tres vezes, o jogo termina empatado
+            // se ganhar a primeira, mas empatar depois... entao e ganhador.
+            
+            alert('placar: ' + JSON.stringify({ p1: j1, pcpu: j2 }) );
+            
+            if( j1 == 2 || j2 == 2 ) {
+                alert('final de jogo' + JSON.stringify({ p1: j1, pcpu: j2 }) )
+            }
+            else {
+                multiplas_rodada();
+            }            
+            
+        });
+     }
 });
 
