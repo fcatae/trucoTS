@@ -25,7 +25,8 @@ class ServerPlayer1 implements ServerPlayer {
 }
 class ServerPlayerCPU implements ServerPlayer {
     name= 'CPU'
-    gameStart(curinga: Carta, cartas: Carta[]) {        
+    gameStart(curinga: Carta, cartas: Carta[]) { 
+        playerCPU.start(curinga, cartas);       
     }
     gameUpdate(cpu_turn) {    
     }

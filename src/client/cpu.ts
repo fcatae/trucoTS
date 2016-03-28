@@ -7,6 +7,14 @@ class CPU {
         { cmd: 'play', carta: { num: 7, tipo: 3 } }
     ];
 
+    start(curinga, carta) {
+        this.game_update = [
+            { cmd: 'play', carta: carta[0] },
+            { cmd: 'play', carta: carta[1] },
+            { cmd: 'play', carta: carta[2] }
+        ];
+    }
+    
     private getCommand() {
         var jogada = this.jogada;
         var command = this.game_update[jogada];
