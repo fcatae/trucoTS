@@ -141,22 +141,47 @@ $(document).ready(function() {
     var rodada = 0;
     var j1 = 0;
     var j2 = 0;
-         
+    var win1 : ServerPlayer = null ;
+             
     function multiplas_rodada() {
         game.turn().then(function(result : any) {
-            if(result.winner == p1)     j1++;        
-            if(result.winner == pcpu)   j2++;
-            if(result.winner == null)   j1 = j2 = 1; // empate
+            // determina quem ganhou a rodada
+            var winner = result.winner; 
+
+            // guarda quem ganhou a primeira rodada
+            if( rodada == 0 && winner != null) {
+                win1 = winner;
+            }
             
-            // se empatar tres vezes, o jogo termina empatado
-            // se ganhar a primeira, mas empatar depois... entao e ganhador.
+            // marca os pontos
+            if(winner == p1)     j1++;        
+            if(winner == pcpu)   j2++;
+            
+            if(winner == null) {
+                // caso tenha sido empate, vai para o desempate
+                if(j1 == j2) {
+                    j1++;
+                    j2++;
+                }
+
+                // se ganhar a primeira, mas empatar depois... entao e ganhador.
+                if( win1 != null ) {
+                    j1 = ( win1 == p1 )   ? 2 : 1;
+                    j2 = ( win1 == pcpu ) ? 2 : 1;                    
+                }
+            }            
             
             alert('placar: ' + JSON.stringify({ p1: j1, pcpu: j2 }) );
             
-            if( j1 == 2 || j2 == 2 ) {
-                alert('final de jogo' + JSON.stringify({ p1: j1, pcpu: j2 }) )
+            if( 
+                (( j1 == 2 || j2 == 2 ) && ( j1 != j2 )) || // ha vencedor
+                ( j1 == 3 && j2 == 3) // empate no final
+            )
+            {
+                alert('final de jogo' + JSON.stringify({ p1: j1, pcpu: j2, win1: win1 }) )
             }
             else {
+                rodada ++;
                 multiplas_rodada();
             }            
             
