@@ -41,6 +41,7 @@ class Game {
     
     p1: ServerPlayer;
     p2: ServerPlayer;
+    manilha: number;
     
     constructor(p1, p2) {
         this.p1 = p1;
@@ -48,10 +49,14 @@ class Game {
     }
     
     start(game_start_event) {
+        this.defineManilha(game_start_event);
         this.p1.gameStart(game_start_event);
         this.p2.gameStart(game_start_event);             
     }
     
+    private defineManilha(game_start_event) {
+        this.manilha = (game_start_event.curinga + 1) % 10;
+    }
     swapPlayers() {
         var swp = this.p1;
         this.p1 = this.p2;
