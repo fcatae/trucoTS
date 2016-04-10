@@ -73,4 +73,7 @@ $(document).ready(function() {
     $('.truco-talk').click(function(ev) {
         player1.talk(ev.target.value);
     })    
+    
+    startGame(player1, playerCPU);
 });
+

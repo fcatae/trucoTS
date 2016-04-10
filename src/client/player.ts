@@ -24,6 +24,11 @@ class PlayerClient {
               this.promiseResolve = resolve;
         });
     }
+    
+    giveUp() {
+        this.playable = false;
+        this.promiseResolve(null, 'giveup');
+    }
 }
 
 var player1 = new PlayerClient();
@@ -74,7 +79,13 @@ player1.game.on('wait_play', function(remote_resolve) {
             
             // http.send
             // emit('server-player1')
-            remote_resolve(carta);
+            
+            if( carta == null ) { // giveup
+                remote_resolve(null, 'giveup');
+            } else {
+                remote_resolve(carta);   
+            }            
+            
             
     });
     

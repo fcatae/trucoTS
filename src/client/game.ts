@@ -3,28 +3,41 @@ enum GameState { inicio, p1, p2, turn, fim };
 class Game {
     
     m: Carta;
+    initial_p1: ServerPlayer;
+    initial_p2: ServerPlayer;
     p1: ServerPlayer;
     p2: ServerPlayer;
     manilha: number;
     
+    lastTalkPlayer: string;
+    
     constructor(p1, p2) {
         this.p1 = p1;
         this.p2 = p2;
+        this.initial_p1 = p1;
+        this.initial_p2 = p2;
     }
     
     start(baralho) {        
         this.defineManilha(baralho);
-        this.p1.gameStart(baralho.curinga, baralho.p1, this.listen);
-        this.p2.gameStart(baralho.curinga, baralho.p2, this.listen);
-        
-        // this.p1.gameListen(this.listen);
-        // this.p2.gameListen(this.listen);
+        this.p1.gameStart(baralho.curinga, baralho.p1, this.listen.bind(this) );
+        this.p2.gameStart(baralho.curinga, baralho.p2, this.listen.bind(this) );
         
         this.updateState(GameState.inicio);
     }
    
    listen(player, param) {
-       alert(player.name + ': ' +param);
+       if( param == 'no' ) {
+           // OUT
+           alert('out');
+           return;
+       }
+       
+       if( player.name != this.lastTalkPlayer ) {
+           alert(player.name + ': ' +param);
+           
+           this.lastTalkPlayer = player.name;
+       }       
    }
    
     private defineManilha(game_start_event) {
@@ -55,8 +68,8 @@ class Game {
                 }
                 
                 // marca os pontos
-                if(winner == p1)     j1++;        
-                if(winner == pcpu)   j2++;
+                if(winner == this.initial_p1)     j1++;        
+                if(winner == this.initial_p2)   j2++;
                 
                 if(winner == null) {
                     // caso tenha sido empate, vai para o desempate
@@ -67,8 +80,8 @@ class Game {
 
                     // se ganhar a primeira, mas empatar depois... entao e ganhador.
                     if( win1 != null ) {
-                        j1 = ( win1 == p1 )   ? 2 : 1;
-                        j2 = ( win1 == pcpu ) ? 2 : 1;                    
+                        j1 = ( win1 == this.initial_p1 )   ? 2 : 1;
+                        j2 = ( win1 == this.initial_p2 ) ? 2 : 1;                    
                     }
                 }            
                 
@@ -82,7 +95,7 @@ class Game {
                     var winner = null;
                     
                     if ( j1 != j2 ) {
-                        winner = (j1 > j2) ? p1 : pcpu;
+                        winner = (j1 > j2) ? this.initial_p1 : this.initial_p2;
                     }
                     resultado = { p1: j1, pcpu: j2, winner: winner };
 
@@ -156,24 +169,16 @@ class Game {
 
 var showMessage: Function;
 
-var $: any;
-$(document).ready(function() {
-
-    var game_start_event = { curinga: { num: 1, tipo: 0 },
-        p1: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }],
-        p2: [{ num: 6, tipo: 1 },{ num: 5, tipo: 2 },{ num: 7, tipo: 3 }]
-    };
+function startGame(player1, player2) {
+    
+    var p1 = new ServerPlayer1(player1);
+    var pcpu = new ServerPlayerCPU();
 
     var baralho = new Baralho();
     var game = new Game(p1, pcpu);
     
-    setTimeout(function() {
-
-        var cartas = baralho.distribuir();         
-        game.start(cartas);
-        game.play();
-                
-    } , 10);
-
-});
-
+    var cartas = baralho.distribuir();         
+    game.start(cartas);
+    game.play();
+    
+}
