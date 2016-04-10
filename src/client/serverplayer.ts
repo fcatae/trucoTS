@@ -24,7 +24,7 @@ class ServerPlayer1 implements ServerPlayer {
         var talkCallback = callback;
         var that = this;
         
-        player1.game.emit('game_listen', talk);
+        player1.game.emit('game_start_listen', talk);
         
         function talk(param) {
             talkCallback(that, param);

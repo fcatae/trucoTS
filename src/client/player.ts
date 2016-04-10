@@ -63,7 +63,7 @@ player1.game.on('game_update', function(comando) {
     }
 });
 
-player1.game.on('game_listen', function(callback) {
+player1.game.on('game_start_listen', function(callback) {
     player1.talk = callback;
 });
 
