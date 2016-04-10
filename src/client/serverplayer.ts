@@ -1,6 +1,6 @@
 interface ServerPlayer {
     gameListen(callback: Function);
-    gameStart(curinga: Carta, cartas: Carta[]);
+    gameStart(curinga: Carta, cartas: Carta[], callback: Function);
     gameUpdate(cpu_turn);
     gameUpdatePlayer(cpu_turn);
     getPlayAsync() : Promise<any>;
@@ -18,8 +18,17 @@ class ServerPlayer1 implements ServerPlayer {
             talkCallback(that, param);
         }
     }
-    gameStart(curinga: Carta, cartas: Carta[]) {
+    gameStart(curinga: Carta, cartas: Carta[], callback: Function) {
         player1.game.emit('game_start', { curinga: curinga, cartas: cartas } );
+
+        var talkCallback = callback;
+        var that = this;
+        
+        player1.game.emit('game_listen', talk);
+        
+        function talk(param) {
+            talkCallback(that, param);
+        }
     }
     gameUpdate(cpu_turn) {
         player1.game.emit('game_update', cpu_turn);
@@ -36,7 +45,7 @@ class ServerPlayer1 implements ServerPlayer {
 }
 class ServerPlayerCPU implements ServerPlayer {
     name= 'CPU'
-    gameStart(curinga: Carta, cartas: Carta[]) { 
+    gameStart(curinga: Carta, cartas: Carta[], callback: Function) { 
         playerCPU.start(curinga, cartas);       
     }
     gameUpdate(cpu_turn) {    

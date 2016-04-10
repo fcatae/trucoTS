@@ -14,11 +14,11 @@ class Game {
     
     start(baralho) {        
         this.defineManilha(baralho);
-        this.p1.gameStart(baralho.curinga, baralho.p1);
-        this.p2.gameStart(baralho.curinga, baralho.p2);
+        this.p1.gameStart(baralho.curinga, baralho.p1, this.listen);
+        this.p2.gameStart(baralho.curinga, baralho.p2, this.listen);
         
-        this.p1.gameListen(this.listen);
-        this.p2.gameListen(this.listen);
+        // this.p1.gameListen(this.listen);
+        // this.p2.gameListen(this.listen);
         
         this.updateState(GameState.inicio);
     }
