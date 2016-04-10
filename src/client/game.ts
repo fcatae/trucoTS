@@ -23,8 +23,8 @@ class Game {
         this.updateState(GameState.inicio);
     }
    
-   listen(param) {
-       alert(param);       
+   listen(player, param) {
+       alert(player.name + ': ' +param);
    }
    
     private defineManilha(game_start_event) {

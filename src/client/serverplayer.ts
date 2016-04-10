@@ -9,7 +9,14 @@ interface ServerPlayer {
 class ServerPlayer1 implements ServerPlayer {
     name= 'P1'
     gameListen(callback) {
-        player1.game.emit('game_listen', callback);
+        var talkCallback = callback;
+        var that = this;
+        
+        player1.game.emit('game_listen', talk);
+        
+        function talk(param) {
+            talkCallback(that, param);
+        }
     }
     gameStart(curinga: Carta, cartas: Carta[]) {
         player1.game.emit('game_start', { curinga: curinga, cartas: cartas } );
@@ -20,7 +27,7 @@ class ServerPlayer1 implements ServerPlayer {
     gameUpdatePlayer(cpu_turn) {
         player1.game.emit('game_update', { cmd: 'play', carta: cpu_turn});
     }
-
+    
     getPlayAsync() : Promise<any>  {
         return new Promise<any>(function(resolve, reject) {
             player1.game.emit('wait_play', resolve);
