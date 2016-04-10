@@ -9,6 +9,8 @@ class PlayerClient {
     
     game = new eventemitter.EventEmitter();
     
+    talk: Function;
+    
     play(carta: Carta) {
         // done
         this.playable = false;
@@ -59,6 +61,10 @@ player1.game.on('game_update', function(comando) {
         depositarCarta(jogada);
 
     }
+});
+
+player1.game.on('game_listen', function(callback) {
+    player1.talk = callback;
 });
 
 player1.game.on('wait_play', function(remote_resolve) {

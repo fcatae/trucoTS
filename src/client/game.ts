@@ -17,8 +17,15 @@ class Game {
         this.p1.gameStart(baralho.curinga, baralho.p1);
         this.p2.gameStart(baralho.curinga, baralho.p2);
         
-        this.updateState(GameState.inicio);             
+        this.p1.gameListen(this.listen);
+        this.p2.gameListen(this.listen);
+        
+        this.updateState(GameState.inicio);
     }
+   
+   listen(param) {
+       alert(param);       
+   }
    
     private defineManilha(game_start_event) {
         this.m = game_start_event.curinga;

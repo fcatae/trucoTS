@@ -68,3 +68,9 @@ function showMessage(text) {
     
     messageBoard.appendChild(msg);
 }
+
+$(document).ready(function() {
+    $('.truco-talk').click(function(ev) {
+        player1.talk(ev.target.value);
+    })    
+});
