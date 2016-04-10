@@ -59,3 +59,12 @@ function depositarCarta(id) {
      
     drop.appendChild(carta);
 }
+
+function showMessage(text) {
+    var messageBoard = document.querySelector('.message-board');
+    var msg = document.createElement('div');
+    msg.className = 'message';
+    msg.textContent = text || '';
+    
+    messageBoard.appendChild(msg);
+}

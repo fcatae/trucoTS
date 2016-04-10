@@ -1,3 +1,5 @@
+enum GameState { inicio, p1, p2, turn, fim };
+
 class Game {
     
     m: Carta;
@@ -10,11 +12,12 @@ class Game {
         this.p2 = p2;
     }
     
-    start(baralho) {
-        
+    start(baralho) {        
         this.defineManilha(baralho);
         this.p1.gameStart(baralho.curinga, baralho.p1);
-        this.p2.gameStart(baralho.curinga, baralho.p2);             
+        this.p2.gameStart(baralho.curinga, baralho.p2);
+        
+        this.updateState(GameState.inicio);             
     }
    
     private defineManilha(game_start_event) {
@@ -31,11 +34,11 @@ class Game {
         var resultado;
 
         var multiplas_rodada = fn_loop_rodadas.bind(this);
-
+        
         multiplas_rodada();
                                 
         function fn_loop_rodadas() {
-            this.turn().then(function(result : any) {
+            this.turn().then( (result : any) => {
                 // determina quem ganhou a rodada
                 var winner = result.winner; 
 
@@ -75,10 +78,12 @@ class Game {
                         winner = (j1 > j2) ? p1 : pcpu;
                     }
                     resultado = { p1: j1, pcpu: j2, winner: winner };
-                    alert('FINAL ' + JSON.stringify(resultado));
+
+                    this.updateState(GameState.fim);
                 }
                 else {
                     rodada ++;
+                    
                     multiplas_rodada();
                 }            
                 
@@ -92,16 +97,21 @@ class Game {
         var p2 = this.p2;
         var m = this.m;
         
+        this.updateState(GameState.p1, p1);
+        
         return p1.getPlayAsync()
             .then( (turn) => {
                 p2.gameUpdatePlayer(turn);
                 
-                return p2
-                    .getPlayAsync()
+                this.updateState(GameState.p2, p2);
+                
+                return p2.getPlayAsync()
                     .then( (turn2) => {
                         p1.gameUpdatePlayer(turn2);
                         
                         var winner = this.showWinner(turn, turn2);
+                        
+                        this.updateState(GameState.turn, winner);
                         
                         ( winner != null && p2 == winner ) && this.swapPlayers();                            
                         
@@ -132,7 +142,12 @@ class Game {
         return (pontos1 > pontos2) ? this.p1 : this.p2;
     }
     
+    private updateState(state: GameState, param?) {
+        showMessage(GameState[state]);
+    }
 }
+
+var showMessage: Function;
 
 var $: any;
 $(document).ready(function() {
