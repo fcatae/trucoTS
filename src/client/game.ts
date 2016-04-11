@@ -35,6 +35,7 @@ class Game {
        }
 
        if( text == 'truco' ) {
+           this.update_truco_state(player);
            this.truco(player);
        }
            
@@ -46,7 +47,7 @@ class Game {
 
     truco(player) {
         this.lastTalkPlayer = player.name;
-        this.updateState(GameState.truco);        
+        this.updateState(GameState.truco, player);        
     }
     
     truco_aceito() {
@@ -201,7 +202,11 @@ class Game {
     }
     
     private updateState(state: GameState, param?) {
-        showMessage(GameState[state]);
+        
+        var player = (param && (param.name + ': ' )) || '';
+        var msg = player + GameState[state];
+        
+        showMessage(msg);
     }
 }
 
