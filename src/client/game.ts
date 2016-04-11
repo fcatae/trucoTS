@@ -1,4 +1,4 @@
-enum GameState { inicio, p1, p2, truco, truco_aceito, turn, fim };
+enum GameState { inicio, p1, p2, truco, truco_aceito, turn, giveup, fim };
 
 class Game {
     
@@ -84,8 +84,8 @@ class Game {
             this.turn().then( (result : any) => {
                 
                 if( result.cmd == 'giveup' ) {
-                    alert('GIVEUPPPP');
-                    this.updateState(GameState.fim);
+                    this.updateState(GameState.giveup);
+                    this.updateState(GameState.fim, result.winner);
                     return;
                 }
                 
@@ -129,7 +129,7 @@ class Game {
                     }
                     resultado = { p1: j1, pcpu: j2, winner: winner };
 
-                    this.updateState(GameState.fim);
+                    this.updateState(GameState.fim, resultado.winner);
                 }
                 else {
                     rodada ++;

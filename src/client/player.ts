@@ -49,6 +49,7 @@ player1.game.on('game_start', function(param) {
     selectionarCarta('c2', {num: -1, tipo: -1});
     selectionarCarta('c3', {num: -1, tipo: -1});    
     
+    
 });
 
 var cpu = { jogada: 0 };
