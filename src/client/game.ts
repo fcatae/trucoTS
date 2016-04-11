@@ -56,6 +56,12 @@ class Game {
             this.updateState(GameState.truco_aceito);     
         }
     }
+    
+    update_truco_state(player) {
+        if( this.lastTalkPlayer != player ) {
+            ( this.lastTalkPlayer ) && this.truco_aceito();
+        }
+    }
 
     private defineManilha(game_start_event) {
         this.m = game_start_event.curinga;
@@ -149,6 +155,7 @@ class Game {
                 
                 if( turn == null )
                     return {  m: m, p1: null, p2: null, winner: p2, cmd: 'giveup' };
+                this.update_truco_state(p1);
                 
                 this.updateState(GameState.p2, p2);
                 
@@ -158,6 +165,7 @@ class Game {
 
                         if( turn == null )
                             return {  m: m, p1: turn, p2: null, winner: p1, cmd: 'giveup' };
+                        this.update_truco_state(p2);
                         
                         var winner = this.showWinner(turn, turn2);
                         
