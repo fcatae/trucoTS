@@ -8,6 +8,7 @@ class Game {
     p1: ServerPlayer;
     p2: ServerPlayer;
     manilha: number;
+    gameFinished = false;
     
     lastTalkPlayer: string;
     lastTrucoOutstanding = false;
@@ -29,6 +30,9 @@ class Game {
     }
    
    listen(player, text) {       
+       if( this.gameFinished ) 
+            return;
+       
        // ignore if it is the same player
        if( player.name == this.lastTalkPlayer ) {
            return;
@@ -103,6 +107,7 @@ class Game {
                         
                     this.p1.gameEnd(winner);
                     this.p2.gameEnd(winner);
+                    this.gameFinished = true;
                                             
                     return;
                 }
@@ -149,6 +154,7 @@ class Game {
 
                     this.p1.gameEnd(winner);
                     this.p2.gameEnd(winner);
+                    this.gameFinished = true;
                         
                     this.updateState(GameState.fim, winner);
                 }
