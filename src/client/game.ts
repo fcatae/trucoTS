@@ -34,20 +34,26 @@ class Game {
            return;
        }
 
-       if( text == 'truco' ) {
-           this.update_truco_state(player);
-           this.truco(player);
+       if( text == 'truco' && this.lastTrucoBasePoints<12 ) {
+           
+           if( this.lastTrucoOutstanding == false || this.lastTrucoBasePoints<9 ) {
+               this.update_truco_state(player);
+               this.truco(player);    
+           }           
        }
            
-       if( text == 'truco_aceito' && this.lastTalkPlayer != null && this.lastTrucoBasePoints<12 ) {
+       if( text == 'truco_aceito' && this.lastTalkPlayer != null ) {
            this.truco_aceito(player);   
        }
-           
    }
 
     truco(player) {
         this.lastTrucoOutstanding = true;
         this.lastTalkPlayer = player.name;
+        
+        this.p1.gameTalk('truco');
+        this.p2.gameTalk('truco');
+
         this.updateState(GameState.truco, player);        
     }
     
@@ -55,6 +61,9 @@ class Game {
         if( this.lastTrucoOutstanding && this.lastTalkPlayer != player ) {
             this.lastTrucoOutstanding = false;
             this.lastTrucoBasePoints += 3;
+
+            this.p1.gameTalk('truco_aceito');
+            this.p2.gameTalk('truco_aceito');            
             this.updateState(GameState.truco_aceito);    
         }
     }
