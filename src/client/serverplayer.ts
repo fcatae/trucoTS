@@ -19,24 +19,15 @@ class ServerPlayer1 implements ServerPlayer {
     game : any = null
     name= 'P1'
     
-    gameListen(callback) {
-        var talkCallback = callback;
-        var that = this;
-        
-        this.player.game.emit('game_listen', null);
-        
-        this.game.once('talk', 
-            function talk(param) {
-                talkCallback(that, param);
-            });
+    gameListen(text) {        
+        this.player.game.emit('game_listen', text);
     }
+    
     gameStart(curinga: Carta, cartas: Carta[], callback: Function) {
         this.player.game.emit('game_start', { curinga: curinga, cartas: cartas } );
 
         var talkCallback = callback;
         var that = this;
-        
-        this.player.game.emit('game_start_listen', null);
 
         this.game.on('talk', talk);
                     
@@ -68,14 +59,20 @@ class ServerPlayer1 implements ServerPlayer {
 class ServerPlayerCPU implements ServerPlayer {
     name= 'CPU'
     game= null
+    
     gameStart(curinga: Carta, cartas: Carta[], callback: Function) { 
-        playerCPU.start(curinga, cartas);       
+        var talkCallback = (text) => { callback(this, text) };
+
+        playerCPU.start(curinga, cartas, talkCallback);
     }
+    
     gameUpdatePlayer(cpu_turn) {        
     }
+    
     getPlayAsync() : Promise<any> {
         return playerCPU.getPlayAsync(1000);
     }    
+    
     gameListen(callback) {
     }    
 }
