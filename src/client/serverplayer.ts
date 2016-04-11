@@ -4,26 +4,32 @@ interface ServerPlayer {
     gameUpdate(cpu_turn);
     gameUpdatePlayer(cpu_turn);
     getPlayAsync() : Promise<any>;
+    game;
 }
 
 class ServerPlayer1 implements ServerPlayer {
     
     constructor(player) {
-        this.player = player;    
+        this.player = player;
+        this.game = new eventemitter.EventEmitter();
+        
+        player.server = this.game;         
     }
     
     player : any = null
+    game : any = null
     name= 'P1'
     
     gameListen(callback) {
         var talkCallback = callback;
         var that = this;
         
-        this.player.game.emit('game_listen', talk);
+        this.player.game.emit('game_listen', null);
         
-        function talk(param) {
-            talkCallback(that, param);
-        }
+        this.game.once('talk', 
+            function talk(param) {
+                talkCallback(that, param);
+            });
     }
     gameStart(curinga: Carta, cartas: Carta[], callback: Function) {
         this.player.game.emit('game_start', { curinga: curinga, cartas: cartas } );
@@ -31,8 +37,10 @@ class ServerPlayer1 implements ServerPlayer {
         var talkCallback = callback;
         var that = this;
         
-        this.player.game.emit('game_start_listen', talk);
-        
+        this.player.game.emit('game_start_listen', null);
+
+        this.game.on('talk', talk);
+                    
         function talk(param) {
             talkCallback(that, param);
         }
@@ -46,9 +54,18 @@ class ServerPlayer1 implements ServerPlayer {
     
     getPlayAsync() : Promise<any>  {
         return new Promise<any>( (resolve, reject) => {
-            this.player.game.emit('wait_play', resolve);
+            this.player.game.emit('wait_play');
+            
+            this.game.on('play', play);
+            
+            function play(param) {
+                var carta = param.carta;
+                resolve(carta);
+            };
+            
         });             
     }
+    
 }
 
 class ServerPlayerCPU implements ServerPlayer {

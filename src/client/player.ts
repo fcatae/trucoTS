@@ -6,28 +6,27 @@ class PlayerClient {
     
     playable = false;
     promiseResolve: Function;
+    server: any;
     
     game = new eventemitter.EventEmitter();
     
-    talk: Function;
+    talk(msg) {
+        this.server.emit('talk', msg);
+    }
+    
+    waitPlayer() {
+        this.playable = true;
+    }
     
     play(carta: Carta) {
         // done
         this.playable = false;
-        this.promiseResolve(carta);
+        this.server.emit('play', { cmd: 'play', carta: carta });
     }
-    
-    getPlayAsync() {
-        this.playable = true;
         
-        return new Promise((resolve, reject) =>{
-              this.promiseResolve = resolve;
-        });
-    }
-    
     giveUp() {
         this.playable = false;
-        this.promiseResolve(null, 'giveup');
+        this.server.emit('play', { cmd: 'play', carta: null });
     }
 }
 
@@ -68,25 +67,6 @@ player1.game.on('game_update', function(comando) {
     }
 });
 
-player1.game.on('game_start_listen', function(callback) {
-    player1.talk = callback;
-});
-
-player1.game.on('wait_play', function(remote_resolve) {
-    
-    player1.getPlayAsync()
-        .then(function(carta) {
-            
-            // http.send
-            // emit('server-player1')
-            
-            if( carta == null ) { // giveup
-                remote_resolve(null, 'giveup');
-            } else {
-                remote_resolve(carta);   
-            }            
-            
-            
-    });
-    
+player1.game.on('wait_play', function() {
+    player1.waitPlayer();
 });
