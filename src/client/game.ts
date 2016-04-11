@@ -1,4 +1,4 @@
-enum GameState { inicio, p1, p2, turn, fim };
+enum GameState { inicio, p1, p2, truco, truco_aceito, turn, fim };
 
 class Game {
     
@@ -10,6 +10,7 @@ class Game {
     manilha: number;
     
     lastTalkPlayer: string;
+    lastTrucoBasePoints = 0;
     
     constructor(p1, p2) {
         this.p1 = p1;
@@ -26,20 +27,36 @@ class Game {
         this.updateState(GameState.inicio);
     }
    
-   listen(player, param) {
-       if( param == 'no' ) {
-           // OUT
-           alert('out');
+   listen(player, text) {
+       
+       // ignore if it is the same player
+       if( player.name == this.lastTalkPlayer ) {
            return;
        }
-       
-       if( player.name != this.lastTalkPlayer ) {
-           alert(player.name + ': ' +param);
+
+       if( text == 'truco' ) {
+           this.truco(player);
+       }
            
-           this.lastTalkPlayer = player.name;
-       }       
+       if( text == 'truco_aceito' && this.lastTalkPlayer != null && this.lastTrucoBasePoints<12 ) {
+           this.truco_aceito();   
+       }
+           
    }
-   
+
+    truco(player) {
+        this.lastTalkPlayer = player.name;
+        this.updateState(GameState.truco);        
+    }
+    
+    truco_aceito() {
+        if( this.lastTalkPlayer != null ) {
+            this.lastTalkPlayer = null;
+            this.lastTrucoBasePoints += 3;
+            this.updateState(GameState.truco_aceito);     
+        }
+    }
+
     private defineManilha(game_start_event) {
         this.m = game_start_event.curinga;
         this.manilha = (game_start_event.curinga.num + 1) % 10;
@@ -59,6 +76,13 @@ class Game {
                                 
         function fn_loop_rodadas() {
             this.turn().then( (result : any) => {
+                
+                if( result.cmd == 'giveup' ) {
+                    alert('GIVEUPPPP');
+                    this.updateState(GameState.fim);
+                    return;
+                }
+                
                 // determina quem ganhou a rodada
                 var winner = result.winner; 
 
@@ -123,11 +147,17 @@ class Game {
             .then( (turn) => {
                 p2.gameUpdatePlayer(turn);
                 
+                if( turn == null )
+                    return {  m: m, p1: null, p2: null, winner: p2, cmd: 'giveup' };
+                
                 this.updateState(GameState.p2, p2);
                 
                 return p2.getPlayAsync()
                     .then( (turn2) => {
                         p1.gameUpdatePlayer(turn2);
+
+                        if( turn == null )
+                            return {  m: m, p1: turn, p2: null, winner: p1, cmd: 'giveup' };
                         
                         var winner = this.showWinner(turn, turn2);
                         
@@ -135,7 +165,7 @@ class Game {
                         
                         ( winner != null && p2 == winner ) && this.swapPlayers();                            
                         
-                        return { m: m, p1: turn, p2: turn2, winner: winner };    
+                        return { m: m, p1: turn, p2: turn2, winner: winner, cmd: 'turn' };    
                     });
             })
     }

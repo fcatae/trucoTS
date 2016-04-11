@@ -74,6 +74,12 @@ $(document).ready(function() {
         player1.talk(ev.target.value);        
     })    
     
+    $('#btn-giveup').click(function(ev) {
+        player1.giveUp();
+    })
+    
     startGame(player1, playerCPU);
+    
+    
 });
 
