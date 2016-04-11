@@ -1,6 +1,7 @@
 interface ServerPlayer {
-    gameListen(callback: Function);
+    gameTalk(text: string);
     gameStart(curinga: Carta, cartas: Carta[], callback: Function);
+    gameEnd(winner);
     gameUpdatePlayer(cpu_turn);
     getPlayAsync() : Promise<any>;
     game;
@@ -19,8 +20,8 @@ class ServerPlayer1 implements ServerPlayer {
     game : any = null
     name= 'P1'
     
-    gameListen(text) {        
-        this.player.game.emit('game_listen', text);
+    gameTalk(text) {        
+        this.player.game.emit('game_talk', text);
     }
     
     gameStart(curinga: Carta, cartas: Carta[], callback: Function) {
@@ -35,8 +36,13 @@ class ServerPlayer1 implements ServerPlayer {
             talkCallback(that, param);
         }
     }
+    
     gameUpdatePlayer(cpu_turn) {
         this.player.game.emit('game_update', { cmd: 'play', carta: cpu_turn});
+    }
+    
+    gameEnd(winner) {
+        this.player.game.emit('game_end', winner.name);
     }
     
     getPlayAsync() : Promise<any>  {
@@ -69,11 +75,14 @@ class ServerPlayerCPU implements ServerPlayer {
     gameUpdatePlayer(cpu_turn) {        
     }
     
+    gameEnd(winner) {
+    }
+    
     getPlayAsync() : Promise<any> {
-        return playerCPU.getPlayAsync(1000);
+        return playerCPU.getPlayAsync(500);
     }    
     
-    gameListen(callback) {
+    gameTalk(text) {
     }    
 }
 

@@ -84,8 +84,17 @@ class Game {
             this.turn().then( (result : any) => {
                 
                 if( result.cmd == 'giveup' ) {
+                    var winner = result.winner;
+                    
                     this.updateState(GameState.giveup);
-                    this.updateState(GameState.fim, result.winner);
+                    this.updateState(GameState.fim, winner);
+
+                    this.p1.gameTalk('giveup');
+                    this.p2.gameTalk('giveup');
+                        
+                    this.p1.gameEnd(winner);
+                    this.p2.gameEnd(winner);
+                                            
                     return;
                 }
                 
@@ -129,7 +138,10 @@ class Game {
                     }
                     resultado = { p1: j1, pcpu: j2, winner: winner };
 
-                    this.updateState(GameState.fim, resultado.winner);
+                    this.p1.gameEnd(winner);
+                    this.p2.gameEnd(winner);
+                        
+                    this.updateState(GameState.fim, winner);
                 }
                 else {
                     rodada ++;
@@ -163,7 +175,7 @@ class Game {
                     .then( (turn2) => {
                         p1.gameUpdatePlayer(turn2);
 
-                        if( turn == null )
+                        if( turn2 == null )
                             return {  m: m, p1: turn, p2: null, winner: p1, cmd: 'giveup' };
                         this.update_truco_state(p2);
                         
@@ -205,7 +217,7 @@ class Game {
         var player = (param && (param.name + ': ' )) || '';
         var msg = player + GameState[state];
         
-        showMessage(msg);
+        // showMessage(msg);
     }
 }
 

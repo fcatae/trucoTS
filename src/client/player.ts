@@ -68,6 +68,15 @@ player1.game.on('game_update', function(comando) {
     }
 });
 
+player1.game.on('game_end', function(winner) {
+    showMessage('Winner: ' + winner);
+});
+
+player1.game.on('game_talk', function(text) {
+    showMessage('Message: ' + text);
+});
+
 player1.game.on('wait_play', function() {
+    showMessage('Your turn');
     player1.waitPlayer();
 });
