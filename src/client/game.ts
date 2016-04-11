@@ -10,6 +10,7 @@ class Game {
     manilha: number;
     
     lastTalkPlayer: string;
+    lastTrucoOutstanding = false;
     lastTrucoBasePoints = 0;
     
     constructor(p1, p2) {
@@ -27,8 +28,7 @@ class Game {
         this.updateState(GameState.inicio);
     }
    
-   listen(player, text) {
-       
+   listen(player, text) {       
        // ignore if it is the same player
        if( player.name == this.lastTalkPlayer ) {
            return;
@@ -40,28 +40,27 @@ class Game {
        }
            
        if( text == 'truco_aceito' && this.lastTalkPlayer != null && this.lastTrucoBasePoints<12 ) {
-           this.truco_aceito();   
+           this.truco_aceito(player);   
        }
            
    }
 
     truco(player) {
+        this.lastTrucoOutstanding = true;
         this.lastTalkPlayer = player.name;
         this.updateState(GameState.truco, player);        
     }
     
-    truco_aceito() {
-        if( this.lastTalkPlayer != null ) {
-            this.lastTalkPlayer = null;
+    truco_aceito(player) {
+        if( this.lastTrucoOutstanding && this.lastTalkPlayer != player ) {
+            this.lastTrucoOutstanding = false;
             this.lastTrucoBasePoints += 3;
-            this.updateState(GameState.truco_aceito);     
+            this.updateState(GameState.truco_aceito);    
         }
     }
     
     update_truco_state(player) {
-        if( this.lastTalkPlayer != player ) {
-            ( this.lastTalkPlayer ) && this.truco_aceito();
-        }
+        (this.lastTrucoOutstanding) && this.truco_aceito(player);
     }
 
     private defineManilha(game_start_event) {
